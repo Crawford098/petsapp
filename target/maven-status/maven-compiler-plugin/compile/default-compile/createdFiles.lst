@@ -1,2 +1,5 @@
-org/santana/controller/Auth/Auth.class
+org/santana/service/auth/IAuth.class
+org/santana/service/users/IUsers.class
 org/santana/Main.class
+org/santana/service/auth/UserAuth.class
+org/santana/service/users/Users.class

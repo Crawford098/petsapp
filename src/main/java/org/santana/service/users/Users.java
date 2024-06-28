@@ -22,6 +22,11 @@ public class Users {
         this.username = username;
     }
 
+    public String getPassword()
+    {
+        return this.password;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

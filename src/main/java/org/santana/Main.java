@@ -2,6 +2,7 @@ package org.santana;
 
 import java.util.Scanner;
 
+import org.santana.service.auth.UserAuth;
 import org.santana.service.users.Users;
 
 class Main {
@@ -27,8 +28,11 @@ class Main {
             String password = scanner.nextLine();
 
             Users user = new Users(username, password);
+            UserAuth auth = new UserAuth();
 
-            user.toString();
+            System.out.println(auth.register(user));
+            System.out.println(auth.login(user));
+            System.out.println(user.toString());
         }
         else
         {
