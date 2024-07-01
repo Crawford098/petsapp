@@ -18,16 +18,16 @@ public class UserAuth implements IAuth {
 
     public String login(Users user) {
 
-        HashMap<String,String> result = new HashMap();
+        HashMap<String, String> result = new HashMap();
 
         for (Users bdUser : this.userList) {
 
             String bdUsername = bdUser.getUsersname();
             String bdPassword = bdUser.getPassword();
 
-            if (bdUsername.equals(user.getUsersname()) && bdPassword.equals(user.getUsersname())) {
+            if (bdUsername.equals(user.getUsersname()) && bdPassword.equals(user.getPassword())) {
 
-                result.put("Resultado:", "Usuario" + user.getUsersname() + " Logueado");
+                result.put("Resultado: ", "Usuario" + user.getUsersname() + " Logueado");
                 break;
             }
         }
