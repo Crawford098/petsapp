@@ -1,5 +1,9 @@
 org/santana/service/auth/IAuth.class
+org/santana/repository/Repository.class
+org/santana/service/database/MysqlConnections.class
 org/santana/service/users/IUsers.class
-org/santana/Main.class
 org/santana/service/auth/UserAuth.class
+org/santana/repository/UserRepository.class
+org/santana/service/database/IConnections.class
+org/santana/Main.class
 org/santana/service/users/Users.class

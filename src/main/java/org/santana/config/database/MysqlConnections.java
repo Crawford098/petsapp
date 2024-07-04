@@ -1,6 +1,6 @@
-package org.santana.service.database;
-import java.sql.DriverManager;
+package org.santana.config.database;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class MysqlConnections {

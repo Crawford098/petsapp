@@ -1,4 +1,4 @@
-package org.santana.service.database;
+package org.santana.config.database;
 import java.sql.Connection;
 import java.sql.SQLException;
 
