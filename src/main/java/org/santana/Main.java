@@ -27,7 +27,7 @@ class Main {
             System.out.println("Type your password");
             String password = scanner.nextLine();
 
-            Users user = new Users(username, password);
+            Users user = new Users(username, password, "prueba@prueba.com");
             UserAuth auth = new UserAuth();
 
             System.out.println(auth.register(user));

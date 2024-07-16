@@ -1,6 +1,12 @@
 
 package org.santana.repository;
 
-public class UserRepository {
+import org.santana.model.UsersModel;
+
+public class UserRepository extends Repository{
+
+    public UserRepository() {
+        super(new UsersModel());
+    }
 
 }

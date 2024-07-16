@@ -3,6 +3,7 @@ package org.santana.service.auth;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.santana.repository.UserRepository;
 import org.santana.service.users.Users;
 
 /**
@@ -32,8 +33,7 @@ public class UserAuth implements IAuth {
             }
         }
 
-        if(result.isEmpty())
-        {
+        if (result.isEmpty()) {
             return "Usuario no encontrado";
         }
 
@@ -41,8 +41,11 @@ public class UserAuth implements IAuth {
     }
 
     public String register(Users user) {
-        this.userList.add(user);
+        //this.userList.add(user);
 
-        return "Usuario" + user.getUsersname() + " ha sido Registrado";
+        UserRepository repository = new UserRepository();
+        boolean result = repository.save(user);
+
+        return (result) ? "Usuario" + user.getUsersname() + " ha sido Registrado" : "El hubo un error al registrar el usuario";
     }
 }

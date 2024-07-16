@@ -2,7 +2,7 @@ package org.santana.model;
 
 import java.time.LocalDate;
 
-public class UserModel implements Model {
+public class UsersModel implements Model {
 
     private Long userId;
     private String username;
