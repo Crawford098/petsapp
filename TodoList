@@ -1,0 +1,18 @@
+Crear anotaciones de los modelos.
+
+Crear una capa para validar dichas anotaciones - opcional
+
+Crear validaciones en el modelo.
+
+
+
+
+JAVA DOC
+/**
+ * Descripción breve del método.
+ *
+ * @param param1 Descripción del primer parámetro.
+ * @param param2 Descripción del segundo parámetro.
+ * @return Descripción del valor de retorno.
+ * @throws ExceptionName Descripción de la excepción que puede ser lanzada.
+ */

@@ -34,12 +34,12 @@ public class Repository {
 
     //Todo: Define the datatable prefix.
     //Todo: Add validations (check it)
-    public boolean save(Object data) {
+    public boolean save(Model dataModel) {
 
         boolean result = false;
-        String tableName = this.tableName(this.model.getClass().getName());
-        String columns = this.getModelColumns();
-        String values = this.getModelValues();
+        String tableName = this.tableName(dataModel.getClass().getName());
+        String columns = this.getModelColumns(dataModel);
+        String values = this.getModelValues(dataModel);
         String sql = "INSERT INTO pe_" + tableName + " (" + columns + ") VALUES (" + values + ")";
 
         try {
@@ -55,38 +55,48 @@ public class Repository {
     /**
      * get model columns in string separed by commas.
      */
-    private String getModelColumns() {
+    private String getModelColumns(Model dataModel) {
         //Get field list of the class.
-        Field[] fields = this.model.getClass().getFields();
+        Field[] fields = this.model.getClass().getDeclaredFields();
         String columns = "";
 
         //Converting the array of fields in a String separed by commas.
         for (Field field : fields) {
             columns += field.getName() + ", ";
         }
-
+        System.out.println(columns);
         return columns.substring(0, columns.length() - 1);
     }
 
     /**
      * get model values in string separed by commas.
      */
-    private String getModelValues() {
+    private String getModelValues(Model dataModel) {
 
-        Field[] fields = this.model.getClass().getFields();
-        String values = "";
+        Field[] fields = dataModel.getClass().getDeclaredFields();
+        StringBuilder values = new StringBuilder();
 
         try {
             for (Field field : fields) {
 
-                Object value = field.get(this.model);
+                if (dataModel.isPrimaryKey(field)) {
+                    continue;
+                }
 
-                values = values + value + ",";
+                field.setAccessible(true);
+                Object value = field.get(dataModel);
+
+                values.append(value).append(",");
             }
         } catch (IllegalAccessException | IllegalArgumentException e) {
+            e.printStackTrace();
         }
 
-        return values.substring(0, values.length() - 1);
+        if (values.length() > 0) {
+            values.setLength(values.length() - 1);
+        }
+
+        return values.toString();
     }
 
     private String tableName(String modelName) {

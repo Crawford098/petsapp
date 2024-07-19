@@ -13,7 +13,7 @@ public class Users {
         this.email = email;
     }
 
-    public String getUsersname() {
+    public String getUsername() {
         return this.username;
     }
 
@@ -23,6 +23,10 @@ public class Users {
 
     public String getPassword() {
         return this.password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getEmail() {
@@ -39,6 +43,7 @@ public class Users {
         sb.append("Users{");
         sb.append("username=").append(username);
         sb.append(", password=").append(password);
+        sb.append(", email=").append(email);
         sb.append('}');
         return sb.toString();
     }

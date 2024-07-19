@@ -2,9 +2,14 @@ package org.santana.model;
 
 import java.time.LocalDate;
 
-public class UsersModel implements Model {
+import org.santana.annotation.modelAnnotation.PrimaryKey;
 
+public class UsersModel extends Model {
+
+
+    @PrimaryKey
     private Long userId;
+    
     private String username;
     private String email;
     private String password;
@@ -46,8 +51,8 @@ public class UsersModel implements Model {
         return created_date;
     }
 
-    public void setCreated_date(LocalDate created_date) {
-        this.created_date = created_date;
+    public void setCreatedDate(LocalDate createdDate) {
+        this.created_date = createdDate;
     }
 
 }

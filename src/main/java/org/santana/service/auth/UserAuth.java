@@ -1,8 +1,10 @@
 package org.santana.service.auth;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.santana.model.UsersModel;
 import org.santana.repository.UserRepository;
 import org.santana.service.users.Users;
 
@@ -23,12 +25,12 @@ public class UserAuth implements IAuth {
 
         for (Users bdUser : this.userList) {
 
-            String bdUsername = bdUser.getUsersname();
+            String bdUsername = bdUser.getUsername();
             String bdPassword = bdUser.getPassword();
 
-            if (bdUsername.equals(user.getUsersname()) && bdPassword.equals(user.getPassword())) {
+            if (bdUsername.equals(user.getUsername()) && bdPassword.equals(user.getPassword())) {
 
-                result.put("Resultado: ", "Usuario" + user.getUsersname() + " Logueado");
+                result.put("Resultado: ", "Usuario" + user.getUsername() + " Logueado");
                 break;
             }
         }
@@ -44,8 +46,15 @@ public class UserAuth implements IAuth {
         //this.userList.add(user);
 
         UserRepository repository = new UserRepository();
-        boolean result = repository.save(user);
+        UsersModel userModel = new UsersModel();
 
-        return (result) ? "Usuario" + user.getUsersname() + " ha sido Registrado" : "El hubo un error al registrar el usuario";
+        userModel.setUsername(user.getUsername());
+        userModel.setEmail(user.getEmail());
+        userModel.setPassword(user.getPassword());
+        userModel.setCreatedDate(LocalDate.now());
+
+        boolean result = repository.save(userModel);
+
+        return (result) ? "Usuario" + user.getUsername() + " ha sido Registrado" : "El hubo un error al registrar el usuario";
     }
 }
