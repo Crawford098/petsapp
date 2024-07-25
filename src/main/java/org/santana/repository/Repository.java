@@ -1,6 +1,5 @@
 package org.santana.repository;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -9,9 +8,6 @@ import java.sql.Statement;
 import org.santana.annotation.modelAnnotation.TableName;
 import org.santana.config.database.MysqlConnections;
 import org.santana.model.Model;
-
-import com.mysql.cj.xdevapi.Table;
-import com.sun.source.tree.TryTree;
 
 public class Repository {
 
@@ -42,7 +38,7 @@ public class Repository {
     public boolean save(Model dataModel) {
 
         boolean result = false;
-        String tableName = this.tableName(dataModel.getClass().getSimpleName());
+        String tableName = this.tableName(dataModel);
         String columns = this.getModelColumns(dataModel);
         String values = this.getModelValues(dataModel);
         String sql = "INSERT INTO pe_" + tableName + " (" + columns + ") VALUES (" + values + ")";
@@ -114,8 +110,9 @@ public class Repository {
      * @return Return tableName from de Model.
      * @throws Exception Anottation exeption.
      */
-    private String tableName(String modelName, Model model) {
+    private String tableName(Model model) {
 
+        String modelName = model.getClass().getSimpleName();
         String tableName = modelName.replaceAll("Model$", "");
 
         try {
