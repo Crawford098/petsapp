@@ -1,12 +1,17 @@
 package org.santana.repository;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import org.santana.annotation.modelAnnotation.TableName;
 import org.santana.config.database.MysqlConnections;
 import org.santana.model.Model;
+
+import com.mysql.cj.xdevapi.Table;
+import com.sun.source.tree.TryTree;
 
 public class Repository {
 
@@ -37,7 +42,7 @@ public class Repository {
     public boolean save(Model dataModel) {
 
         boolean result = false;
-        String tableName = this.tableName(dataModel.getClass().getName());
+        String tableName = this.tableName(dataModel.getClass().getSimpleName());
         String columns = this.getModelColumns(dataModel);
         String values = this.getModelValues(dataModel);
         String sql = "INSERT INTO pe_" + tableName + " (" + columns + ") VALUES (" + values + ")";
@@ -53,14 +58,16 @@ public class Repository {
     }
 
     /**
-     * get model columns in string separed by commas.
+     * Get model columns in string separed by commas.
+     *
+     * @param Model Model to insert.
+     * @return String of columns separed by Commas.
      */
     private String getModelColumns(Model dataModel) {
         //Get field list of the class.
         Field[] fields = this.model.getClass().getDeclaredFields();
         String columns = "";
 
-        //Converting the array of fields in a String separed by commas.
         for (Field field : fields) {
             columns += field.getName() + ", ";
         }
@@ -99,8 +106,32 @@ public class Repository {
         return values.toString();
     }
 
-    private String tableName(String modelName) {
+    /**
+     * Descripción breve del método.
+     *
+     * @param String Model Name.
+     * @param Model Model.
+     * @return Return tableName from de Model.
+     * @throws Exception Anottation exeption.
+     */
+    private String tableName(String modelName, Model model) {
 
-        return modelName.replaceAll("Model$", "");
+        String tableName = modelName.replaceAll("Model$", "");
+
+        try {
+            Field field = model.getClass().getDeclaredField(modelName);
+
+            if (field.isAnnotationPresent(TableName.class)) {
+                TableName tableAnnotation = field.getAnnotation(TableName.class);
+
+                if (!tableAnnotation.tableName().isEmpty()) {
+                    tableName = tableAnnotation.tableName();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return tableName;
     }
 }

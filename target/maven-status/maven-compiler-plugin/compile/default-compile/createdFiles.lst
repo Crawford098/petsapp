@@ -12,5 +12,4 @@ org/santana/repository/Repository.class
 org/santana/service/users/IUsers.class
 org/santana/service/auth/UserAuth.class
 org/santana/model/IModel.class
-org/santana/service/processAnnotations/processAnnotations.class
 org/santana/model/Model.class
