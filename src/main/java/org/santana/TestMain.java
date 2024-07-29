@@ -14,5 +14,4 @@ class TestMain {
         
         System.out.println(auth.register(user));
     }
-
 }

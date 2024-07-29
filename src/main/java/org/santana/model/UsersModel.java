@@ -13,7 +13,7 @@ public class UsersModel extends Model {
     private String username;
     private String email;
     private String password;
-    private LocalDate created_date;
+    private LocalDate created_at;
 
     public Long getUserId() {
         return userId;
@@ -47,12 +47,12 @@ public class UsersModel extends Model {
         this.password = password;
     }
 
-    public LocalDate getCreated_date() {
-        return created_date;
+    public LocalDate getCreatedAt() {
+        return created_at;
     }
 
-    public void setCreatedDate(LocalDate createdDate) {
-        this.created_date = createdDate;
+    public void setCreatedAt(LocalDate createdDate) {
+        this.created_at = createdDate;
     }
 
 }

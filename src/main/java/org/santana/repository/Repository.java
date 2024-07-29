@@ -48,6 +48,7 @@ public class Repository {
             result = (statement.executeUpdate(sql) != 0);
 
         } catch (SQLException e) {
+            e.printStackTrace();
         }
 
         return result;
@@ -64,10 +65,15 @@ public class Repository {
         Field[] fields = this.model.getClass().getDeclaredFields();
         String columns = "";
 
-        for (Field field : fields) {
-            columns += field.getName() + ", ";
+        for (Field field : fields) { 
+
+            if (dataModel.isPrimaryKey(field)) {
+                continue;
+            }
+
+            columns += field.getName() + ",";
         }
-        System.out.println(columns);
+
         return columns.substring(0, columns.length() - 1);
     }
 
@@ -87,7 +93,7 @@ public class Repository {
                 }
 
                 field.setAccessible(true);
-                Object value = field.get(dataModel);
+                Object value = "'" + field.get(dataModel) + "'";
 
                 values.append(value).append(",");
             }
@@ -129,6 +135,6 @@ public class Repository {
             e.printStackTrace();
         }
 
-        return tableName;
+        return tableName.toLowerCase();
     }
 }

@@ -51,10 +51,10 @@ public class UserAuth implements IAuth {
         userModel.setUsername(user.getUsername());
         userModel.setEmail(user.getEmail());
         userModel.setPassword(user.getPassword());
-        userModel.setCreatedDate(LocalDate.now());
+        userModel.setCreatedAt(LocalDate.now());
 
         boolean result = repository.save(userModel);
 
-        return (result) ? "Usuario" + user.getUsername() + " ha sido Registrado" : "El hubo un error al registrar el usuario";
+        return (result) ? "Usuario " + user.getUsername() + " ha sido Registrado" : "El hubo un error al registrar el usuario";
     }
 }
