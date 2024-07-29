@@ -2,8 +2,11 @@ package org.santana.repository;
 
 import java.lang.reflect.Field;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.santana.annotation.modelAnnotation.TableName;
 import org.santana.config.database.MysqlConnections;
@@ -23,10 +26,21 @@ public class Repository {
         }
     }
 
-    public void findById(int $id) {
+    //todo: primaryKey Columns;
+    public List<Model> findById(int id) {
+        String query = "SELECT * FROM " + tableName(this.model) + " WHERE userId = " + id;
+        List<Model> resultList = new ArrayList();
 
-        // PreparedStatement preparedStatement = this.db.prepareStatement("");
-        //todo: probar la base de datos.
+        try {
+            Statement statement = this.db.createStatement();
+            ResultSet result = statement.executeQuery(query);
+            
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return resultList;
     }
 
     public void findAll() {
@@ -65,7 +79,7 @@ public class Repository {
         Field[] fields = this.model.getClass().getDeclaredFields();
         String columns = "";
 
-        for (Field field : fields) { 
+        for (Field field : fields) {
 
             if (dataModel.isPrimaryKey(field)) {
                 continue;

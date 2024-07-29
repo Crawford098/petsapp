@@ -1,5 +1,6 @@
 package org.santana;
 
+import org.santana.repository.UserRepository;
 import org.santana.service.auth.UserAuth;
 import org.santana.service.users.Users;
 
@@ -13,5 +14,8 @@ class TestMain {
         UserAuth auth = new UserAuth();
         
         System.out.println(auth.register(user));
+
+        UserRepository userRepository = new UserRepository();
+        System.out.println(userRepository.findById(1));
     }
 }
