@@ -28,13 +28,13 @@ public class Repository {
     //todo: primaryKey Columns;
     public ResultSet findById(int id) {
         ResultSet result = null;
-        String query = "SELECT * FROM " + tableName(this.model) + " WHERE userId = ?";
-
         String primaryKey = this.model.primaryKeyValue();
+        String query = "SELECT * FROM " + tableName(this.model) + " WHERE ? = ?";
 
         try {
             PreparedStatement statement = this.db.prepareStatement(query);
-            statement.setInt(1, id);
+            statement.setString(1, primaryKey);
+            statement.setInt(2, id);
             result = statement.executeQuery();
 
         } catch (Exception e) {
