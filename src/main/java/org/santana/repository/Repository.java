@@ -2,11 +2,10 @@ package org.santana.repository;
 
 import java.lang.reflect.Field;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.santana.annotation.modelAnnotation.TableName;
 import org.santana.config.database.MysqlConnections;
@@ -27,20 +26,22 @@ public class Repository {
     }
 
     //todo: primaryKey Columns;
-    public List<Model> findById(int id) {
-        String query = "SELECT * FROM " + tableName(this.model) + " WHERE userId = " + id;
-        List<Model> resultList = new ArrayList();
+    public ResultSet findById(int id) {
+        ResultSet result = null;
+        String query = "SELECT * FROM " + tableName(this.model) + " WHERE userId = ?";
+
+        String primaryKey = this.model.primaryKeyValue();
 
         try {
-            Statement statement = this.db.createStatement();
-            ResultSet result = statement.executeQuery(query);
-            
+            PreparedStatement statement = this.db.prepareStatement(query);
+            statement.setInt(1, id);
+            result = statement.executeQuery();
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
-        return resultList;
+
+        return result;
     }
 
     public void findAll() {
@@ -49,12 +50,13 @@ public class Repository {
 
     //Todo: Define the datatable prefix.
     //Todo: Add validations (check it)
-    public boolean save(Model dataModel) {
+    //Todo: Validate if model is empty();
+    public boolean save() {//Model dataModel
 
         boolean result = false;
-        String tableName = this.tableName(dataModel);
-        String columns = this.getModelColumns(dataModel);
-        String values = this.getModelValues(dataModel);
+        String tableName = this.tableName(this.model);
+        String columns = this.getModelColumns(this.model);
+        String values = this.getModelValues(this.model);
         String sql = "INSERT INTO pe_" + tableName + " (" + columns + ") VALUES (" + values + ")";
 
         try {

@@ -45,15 +45,15 @@ public class UserAuth implements IAuth {
     public String register(Users user) {
         //this.userList.add(user);
 
-        UserRepository repository = new UserRepository();
         UsersModel userModel = new UsersModel();
-
         userModel.setUsername(user.getUsername());
         userModel.setEmail(user.getEmail());
         userModel.setPassword(user.getPassword());
         userModel.setCreatedAt(LocalDate.now());
 
-        boolean result = repository.save(userModel);
+        UserRepository repository = new UserRepository(userModel);
+
+        boolean result = repository.save();
 
         return (result) ? "Usuario " + user.getUsername() + " ha sido Registrado" : "El hubo un error al registrar el usuario";
     }

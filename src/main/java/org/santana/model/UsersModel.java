@@ -6,7 +6,7 @@ import org.santana.annotation.modelAnnotation.PrimaryKey;
 
 public class UsersModel extends Model {
 
-    @PrimaryKey
+    @PrimaryKey(value = "userId")
     private Long userId;
     
     private String username;

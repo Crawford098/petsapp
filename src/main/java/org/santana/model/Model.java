@@ -11,4 +11,12 @@ public class Model implements IModel {
     public boolean isPrimaryKey(Field field) {
         return (field.isAnnotationPresent(PrimaryKey.class));
     }
+
+    public String primaryKeyValue() {
+        String anotationValue = null;
+        if (this.getClass().isAnnotationPresent(PrimaryKey.class)) {
+            anotationValue = this.getClass().getAnnotation(PrimaryKey.class).value();
+        }
+        return anotationValue;
+    }
 }
