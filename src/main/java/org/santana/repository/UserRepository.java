@@ -1,6 +1,7 @@
 package org.santana.repository;
 
 import org.santana.model.UsersModel;
+import org.santana.repository.core.Repository;
 
 public class UserRepository extends Repository{
 

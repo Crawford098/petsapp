@@ -1,4 +1,4 @@
-package org.santana.repository;
+package org.santana.repository.core;
 
 import java.util.Map;
 

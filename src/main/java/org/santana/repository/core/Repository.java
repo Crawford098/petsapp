@@ -1,4 +1,4 @@
-package org.santana.repository;
+package org.santana.repository.core;
 
 import java.lang.reflect.Field;
 import java.sql.Connection;
@@ -13,7 +13,7 @@ import org.santana.annotation.modelAnnotation.PrimaryKey;
 import org.santana.annotation.modelAnnotation.TableName;
 import org.santana.config.database.MysqlConnections;
 import org.santana.controller.helpers.AnnotationHelpers;
-import org.santana.model.Model;
+import org.santana.model.core.Model;
 
 public class Repository {
 

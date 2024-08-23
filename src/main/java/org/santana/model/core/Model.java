@@ -1,4 +1,4 @@
-package org.santana.model;
+package org.santana.model.core;
 
 import java.lang.reflect.Field;
 

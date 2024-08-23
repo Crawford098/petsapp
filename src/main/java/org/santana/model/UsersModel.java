@@ -3,6 +3,7 @@ package org.santana.model;
 import java.time.LocalDate;
 
 import org.santana.annotation.modelAnnotation.PrimaryKey;
+import org.santana.model.core.Model;
 
 public class UsersModel extends Model {
 
