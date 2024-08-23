@@ -2,13 +2,17 @@ package org.santana.repository;
 
 import java.lang.reflect.Field;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
+import org.santana.annotation.modelAnnotation.PrimaryKey;
 import org.santana.annotation.modelAnnotation.TableName;
 import org.santana.config.database.MysqlConnections;
+import org.santana.controller.helpers.AnnotationHelpers;
 import org.santana.model.Model;
 
 public class Repository {
@@ -25,23 +29,35 @@ public class Repository {
         }
     }
 
-    //todo: primaryKey Columns;
-    public ResultSet findById(int id) {
-        ResultSet result = null;
-        String primaryKey = this.model.primaryKeyValue();
-        String query = "SELECT * FROM " + tableName(this.model) + " WHERE ? = ?";
+    public Map findById(int id) {
+        Map<String, Object> resultMap = new LinkedHashMap<>();
+        Field[] modelFields = this.model.getClass().getDeclaredFields();
 
-        try {
-            PreparedStatement statement = this.db.prepareStatement(query);
-            statement.setString(1, primaryKey);
-            statement.setInt(2, id);
-            result = statement.executeQuery();
+        String primaryKey = AnnotationHelpers.getAnnotationName(modelFields, PrimaryKey.class);
+        String tableName = "pe_" + this.tableName(this.model);
+        String query = "SELECT * FROM " + tableName + " WHERE " + primaryKey + " = " + id;
+
+        try (Statement statement = this.db.createStatement()) {
+            ResultSet result = statement.executeQuery(query);
+
+            ResultSetMetaData metaData = result.getMetaData();
+            int columnsCount = metaData.getColumnCount();
+
+            while (result.next()) {
+                for (int i = 1; i <= columnsCount; i++) {
+                    String columnName = metaData.getColumnName(i);
+                    Object columnValue = result.getObject(i);
+
+                    System.out.println(columnName + ": " + columnValue);
+                    resultMap.put(columnName, columnValue);
+                }
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return result;
+        return resultMap;
     }
 
     public void findAll() {

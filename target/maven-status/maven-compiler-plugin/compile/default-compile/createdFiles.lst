@@ -12,5 +12,6 @@ org/santana/repository/Repository.class
 org/santana/service/users/IUsers.class
 org/santana/service/auth/UserAuth.class
 org/santana/annotation/modelAnnotation/TableName.class
+org/santana/controller/helpers/AnnotationHelpers.class
 org/santana/model/IModel.class
 org/santana/model/Model.class

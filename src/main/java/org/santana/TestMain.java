@@ -16,6 +16,7 @@ class TestMain {
         // System.out.println(auth.register(user));
 
         UserRepository userRepository = new UserRepository();
+
         System.out.println(userRepository.findById(1));
     }
 }
