@@ -17,6 +17,6 @@ class TestMain {
 
         UserRepository userRepository = new UserRepository();
 
-        System.out.println(userRepository.findById(1));
+        System.out.println(userRepository.findAll());
     }
 }
