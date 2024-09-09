@@ -8,11 +8,13 @@ class TestMain {
 
     public static void main(String[] args) {
 
-        Users user = new Users("jonathan", "santana", "prueba@gmail.com");
+        Users user = new Users();
+        user.setUsername("Jonathan");
+        user.setEmail("prueba@gmail.com");
         user.setPassword("123456");
 
         UserAuth auth = new UserAuth();
-        
+
         // System.out.println(auth.register(user));
 
         UserRepository userRepository = new UserRepository();
