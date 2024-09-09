@@ -3,16 +3,18 @@ package org.santana.repository.core;
 import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.santana.annotation.modelAnnotation.PrimaryKey;
 import org.santana.annotation.modelAnnotation.TableName;
 import org.santana.config.database.MysqlConnections;
 import org.santana.controller.helpers.AnnotationHelpers;
+import org.santana.controller.helpers.RepositoryHelpers;
 import org.santana.model.core.Model;
 
 public class Repository {
@@ -39,19 +41,7 @@ public class Repository {
 
         try (Statement statement = this.db.createStatement()) {
             ResultSet result = statement.executeQuery(query);
-
-            ResultSetMetaData metaData = result.getMetaData();
-            int columnsCount = metaData.getColumnCount();
-
-            while (result.next()) {
-                for (int i = 1; i <= columnsCount; i++) {
-                    String columnName = metaData.getColumnName(i);
-                    Object columnValue = result.getObject(i);
-
-                    System.out.println(columnName + ": " + columnValue);
-                    resultMap.put(columnName, columnValue);
-                }
-            }
+            resultMap = RepositoryHelpers.getResultMap(result);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -60,8 +50,20 @@ public class Repository {
         return resultMap;
     }
 
-    public void findAll() {
+    public List findAll() {
+        List<Map> resultList = new ArrayList<>();
+        String tableName = "pe_" + this.tableName(this.model);
+        String query = "SELECT * FROM " + tableName;
 
+        try (Statement statement = this.db.createStatement()) {
+            ResultSet result = statement.executeQuery(query);
+            resultList = RepositoryHelpers.getResultList(result);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return resultList;
     }
 
     //Todo: Define the datatable prefix.
