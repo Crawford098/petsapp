@@ -88,6 +88,28 @@ public class Repository {
         return result;
     }
 
+//todo: remove the last character in columns string
+//todo: encapsule the String into ('') to the correct ejecution of the query
+    public boolean updateById(Map<String, Object> data, int id) {
+
+        String tableName = this.tableName(this.model);
+        Field[] modelFields = this.model.getClass().getDeclaredFields();
+        String primaryKey = AnnotationHelpers.getAnnotationName(modelFields, PrimaryKey.class);
+
+        StringBuilder columns = new StringBuilder();
+        data.forEach((key, value) -> columns.append(key).append(" = ").append(value).append(","));
+
+        String sql = "UPDATE " + tableName + " SET " + columns.toString() + " WHERE " + primaryKey + " = " + id;
+
+        System.err.println(sql);
+
+        return true;
+    }
+
+    public void delete(int id) {
+
+    }
+
     /**
      * Get model columns in string separed by commas.
      *

@@ -33,13 +33,14 @@ public class RepositoryHelpers {
     public static List getResultList(ResultSet result)
     {
         List<Map> resultList = new ArrayList<>();
-        Map<String, Object> resultMap = new LinkedHashMap<>();
 
         try {
             ResultSetMetaData metaData = result.getMetaData();
             int columnsCount = metaData.getColumnCount();
 
             while (result.next()) {
+                Map<String, Object> resultMap = new LinkedHashMap<>();
+
                 for (int i = 1; i <= columnsCount; i++) {
                     String columnName = metaData.getColumnName(i);
                     Object columnValue = result.getObject(i);

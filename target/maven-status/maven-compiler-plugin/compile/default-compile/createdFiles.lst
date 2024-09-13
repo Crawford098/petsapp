@@ -6,6 +6,7 @@ org/santana/repository/core/Repository.class
 org/santana/config/database/MysqlConnections.class
 org/santana/repository/UserRepository.class
 org/santana/annotation/modelAnnotation/PrimaryKey.class
+org/santana/controller/helpers/StringHelper.class
 org/santana/model/core/IModel.class
 org/santana/Main.class
 org/santana/service/users/Users.class
