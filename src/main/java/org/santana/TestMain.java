@@ -1,8 +1,6 @@
 package org.santana;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import org.santana.model.UsersModel;
 import org.santana.repository.UserRepository;
 import org.santana.service.auth.UserAuth;
 import org.santana.service.users.Users;
@@ -20,10 +18,17 @@ class TestMain {
 
         // System.out.println(auth.register(user));
         UserRepository userRepository = new UserRepository();
-        Map<String, Object> data = new HashMap();
-        data.put("userName", "New name");
-        data.put("email", "prueba2@prueba@gmail.com");
+        // Map<String, Object> data = new HashMap();
+        // data.put("userName", "New name");
+        // data.put("email", "prueba2@prueba@gmail.com");
 
-        System.out.println(userRepository.updateById(data, 1));
+        UsersModel userModel = new UsersModel();
+
+        userModel.setUsername("prueba");
+        userModel.setEmail("email@gmail.com");
+
+        userModel.getPropertiesWithValue();
+
+        // System.out.println(userRepository.updateById(userModel, 1));
     }
 }

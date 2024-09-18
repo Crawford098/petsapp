@@ -2,6 +2,7 @@ package org.santana.repository.core;
 
 import java.lang.reflect.Field;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -15,6 +16,7 @@ import org.santana.annotation.modelAnnotation.TableName;
 import org.santana.config.database.MysqlConnections;
 import org.santana.controller.helpers.AnnotationHelpers;
 import org.santana.controller.helpers.RepositoryHelpers;
+import static org.santana.controller.helpers.StringHelper.trimL;
 import org.santana.model.core.Model;
 
 public class Repository {
@@ -66,10 +68,7 @@ public class Repository {
         return resultList;
     }
 
-    //Todo: Define the datatable prefix.
-    //Todo: Add validations (check it)
-    //Todo: Validate if model is empty();
-    public boolean save() {//Model dataModel
+    public boolean save() {
 
         boolean result = false;
         String tableName = this.tableName(this.model);
@@ -88,20 +87,35 @@ public class Repository {
         return result;
     }
 
-//todo: remove the last character in columns string
-//todo: encapsule the String into ('') to the correct ejecution of the query
-    public boolean updateById(Map<String, Object> data, int id) {
+    public boolean updateById(Model data, int id) {
 
-        String tableName = this.tableName(this.model);
+        String tableName = "pe_" + this.tableName(this.model);
         Field[] modelFields = this.model.getClass().getDeclaredFields();
         String primaryKey = AnnotationHelpers.getAnnotationName(modelFields, PrimaryKey.class);
 
-        StringBuilder columns = new StringBuilder();
-        data.forEach((key, value) -> columns.append(key).append(" = ").append(value).append(","));
+        Field[] fields = data.getClass().getDeclaredFields();
 
-        String sql = "UPDATE " + tableName + " SET " + columns.toString() + " WHERE " + primaryKey + " = " + id;
+        String columns = "";
 
-        System.err.println(sql);
+        for (Field field : fields) {
+
+            if (data.isPrimaryKey(field)) {
+                continue;
+            }
+
+            columns += field.getName() + " = ?,";
+        }
+
+        String sql = "UPDATE " + tableName + " SET " + trimL(columns) + " WHERE " + primaryKey + " = " + id;
+
+        try {
+            PreparedStatement ps = this.db.prepareStatement(sql);
+
+            ps.setObject(id, ps);
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
 
         return true;
     }
@@ -130,7 +144,7 @@ public class Repository {
             columns += field.getName() + ",";
         }
 
-        return columns.substring(0, columns.length() - 1);
+        return trimL(columns);
     }
 
     /**
