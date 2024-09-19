@@ -6,6 +6,8 @@ import java.util.Map;
 
 import org.santana.annotation.modelAnnotation.PrimaryKey;
 import org.santana.annotation.modelAnnotation.TableName;
+import static org.santana.controller.helpers.AnnotationHelpers.getAnnotationName;
+import static org.santana.controller.helpers.StringHelper.trimL;
 
 public class Model implements IModel {
 
@@ -13,7 +15,6 @@ public class Model implements IModel {
 
     }
 
-    // todo: finish this function.
     @Override
     public boolean isPrimaryKey(Field field) {
         return (field.isAnnotationPresent(PrimaryKey.class));
@@ -27,7 +28,18 @@ public class Model implements IModel {
         return anotationValue;
     }
 
-//todoProbar
+    public String primarykeyName() {
+        Field[] modelFields = this.getClass().getDeclaredFields();
+        return getAnnotationName(modelFields, PrimaryKey.class);
+    }
+
+    //todoProbar
+    /**
+     * Get database`s table name.
+     *
+     * @return Return tableName from de Model.
+     * @throws Exception Anottation exception.
+     */
     public String tableName() {
         String modelName = this.getClass().getSimpleName();
         String tableName = modelName.replaceAll("Model$", "");
@@ -49,8 +61,106 @@ public class Model implements IModel {
         return tableName.toLowerCase();
     }
 
+    /**
+     * Get model columns in string separed by commas.
+     *
+     * @return String
+     */
+    public String getModelColumns(boolean propertieWithValue) {
+        Field[] fields = this.getClass().getDeclaredFields();
+        String columns = "";
+
+        for (Field field : fields) {
+
+            if (this.isPrimaryKey(field)) {
+                continue;
+            }
+
+            try {
+                if (propertieWithValue) {
+                    if (field.get(this) != null) {
+                        columns += field.getName() + ",";
+                    }
+
+                } else {
+                    columns += field.getName() + ",";
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        return trimL(columns);
+    }
+
+    /**
+     * Get model columns in string separed by commas.
+     *
+     * @return String
+     */
+    public String getModelColumns() {
+        return this.getModelColumns(false);
+    }
+
+    /**
+     * Get model values in string separed by commas.
+     *
+     * @return String
+     */
+    public String getModelValues(boolean propertieWithValue) {
+        Field[] fields = this.getClass().getDeclaredFields();
+        StringBuilder values = new StringBuilder();
+
+        try {
+
+            for (Field field : fields) {
+
+                if (this.isPrimaryKey(field)) {
+                    continue;
+                }
+
+                field.setAccessible(true);
+                Object value = "";
+
+                if (propertieWithValue) {
+                    if (field.get(this) != null) {
+                        value = "'" + field.get(this) + "'";
+                    }
+
+                } else {
+                    value = "'" + field.get(this) + "'";
+                }
+
+                values.append(value).append(",");
+            }
+
+        } catch (IllegalAccessException | IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+
+        if (values.length() > 0) {
+            values.setLength(values.length() - 1);
+        }
+
+        return values.toString();
+    }
+
+    public String getModelValues() {
+        return this.getModelValues(false);
+    }
 
     public Map<String, Object> getPropertiesWithValue() {
+        Map<String, Object> resultMap = this.getPropertyMap(true);
+        return resultMap;
+    }
+
+    public Map<String, Object> getAllProperties() {
+        Map<String, Object> resultMap = this.getPropertyMap(false);
+        return resultMap;
+    }
+
+    private Map<String, Object> getPropertyMap(boolean withValue) {
 
         Field[] fields = this.getClass().getDeclaredFields();
         Map<String, Object> resultMap = new LinkedHashMap<>();
@@ -64,9 +174,13 @@ public class Model implements IModel {
             try {
                 field.setAccessible(true);
 
-                String name = field.getName();
                 var value = field.get(this);
-                if (value != null) {
+
+                if (withValue) {
+                    if (value != null) {
+                        resultMap.put(field.getName(), value);
+                    }
+                } else {
                     resultMap.put(field.getName(), value);
                 }
 

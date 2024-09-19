@@ -13,14 +13,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.santana.annotation.modelAnnotation.PrimaryKey;
-import org.santana.annotation.modelAnnotation.TableName;
 import org.santana.config.database.MysqlConnections;
 import org.santana.controller.helpers.AnnotationHelpers;
 import org.santana.controller.helpers.RepositoryHelpers;
 import static org.santana.controller.helpers.StringHelper.trimL;
 import org.santana.model.core.Model;
 
-public class Repository {
+public class Repository implements IRepository{
 
     public Connection db;
     public Model model;
@@ -34,12 +33,13 @@ public class Repository {
         }
     }
 
+    @Override
     public Map findById(int id) {
         Map<String, Object> resultMap = new LinkedHashMap<>();
         Field[] modelFields = this.model.getClass().getDeclaredFields();
 
         String primaryKey = AnnotationHelpers.getAnnotationName(modelFields, PrimaryKey.class);
-        String tableName = "pe_" + this.tableName(this.model);
+        String tableName = "pe_" + this.model.tableName();
         String query = "SELECT * FROM " + tableName + " WHERE " + primaryKey + " = " + id;
 
         try (Statement statement = this.db.createStatement()) {
@@ -53,9 +53,10 @@ public class Repository {
         return resultMap;
     }
 
+    @Override
     public List findAll() {
         List<Map> resultList = new ArrayList<>();
-        String tableName = "pe_" + this.tableName(this.model);
+        String tableName = "pe_" + this.model.tableName();
         String query = "SELECT * FROM " + tableName;
 
         try (Statement statement = this.db.createStatement()) {
@@ -69,17 +70,31 @@ public class Repository {
         return resultList;
     }
 
-    public boolean save() {
+    @Override
+    public Map save(Model model) {
+        Map<String, Integer> result = new LinkedHashMap<>();
+        String tableName = model.tableName();
+        String columns = model.getModelColumns();
+        Map<String, Object> columnWithValues = model.getAllProperties();
 
-        boolean result = false;
-        String tableName = this.tableName(this.model);
-        String columns = this.getModelColumns(this.model);
-        String values = this.getModelValues(this.model);
-        String sql = "INSERT INTO pe_" + tableName + " (" + columns + ") VALUES (" + values + ")";
+        String preparedValues = "";
+
+        for (String key : columnWithValues.keySet()) {
+            preparedValues += " ?,";
+        }
+
+        String sql = "INSERT INTO pe_" + tableName + " (" + columns + ") VALUES (" + trimL(preparedValues) + ")";
 
         try {
-            Statement statement = this.db.createStatement();
-            result = (statement.executeUpdate(sql) != 0);
+            PreparedStatement ps = this.db.prepareStatement(sql);
+            int counter = 1;
+
+            for (Object value : columnWithValues.values()) {
+                ps.setObject(counter, value);
+                counter++;
+            }
+
+            result.put("Result", ps.executeUpdate());
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -88,13 +103,12 @@ public class Repository {
         return result;
     }
 
+    @Override
     public Map updateById(Model data, int id) {
+        int rowsUpdated = 0;
         String tableName = "pe_" + data.tableName();
-        Field[] modelFields = this.model.getClass().getDeclaredFields(); //TODO: pasar al modelo
-        String primaryKey = AnnotationHelpers.getAnnotationName(modelFields, PrimaryKey.class);
+        String primaryKey = data.primarykeyName();
         Map<String, Object> columnWithValues = data.getPropertiesWithValue();
-        Field[] fields = data.getClass().getDeclaredFields();
-        int rowsInserted = 0;
         String columns = "";
 
         for (String key : columnWithValues.keySet()) {
@@ -112,101 +126,21 @@ public class Repository {
                 ps.setObject(counter, value);
                 counter++;
             }
-            rowsInserted = ps.executeUpdate();
+
+            rowsUpdated = ps.executeUpdate();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         Map<String, Integer> result = new HashMap<>();
-        result.put("result", rowsInserted);
+        result.put("result", rowsUpdated);
         return result;
     }
 
-    public void delete(int id) {
+    @Override
+    public Map delete(int id) {
 
-    }
-
-    /**
-     * Get model columns in string separed by commas.
-     *
-     * @param Model Model to insert.
-     * @return String of columns separed by Commas.
-     */
-    private String getModelColumns(Model dataModel) {
-        //Get field list of the class.
-        Field[] fields = this.model.getClass().getDeclaredFields();
-        String columns = "";
-
-        for (Field field : fields) {
-
-            if (dataModel.isPrimaryKey(field)) {
-                continue;
-            }
-
-            columns += field.getName() + ",";
-        }
-
-        return trimL(columns);
-    }
-
-    /**
-     * get model values in string separed by commas.
-     */
-    private String getModelValues(Model dataModel) {
-
-        Field[] fields = dataModel.getClass().getDeclaredFields();
-        StringBuilder values = new StringBuilder();
-
-        try {
-            for (Field field : fields) {
-
-                if (dataModel.isPrimaryKey(field)) {
-                    continue;
-                }
-
-                field.setAccessible(true);
-                Object value = "'" + field.get(dataModel) + "'";
-
-                values.append(value).append(",");
-            }
-        } catch (IllegalAccessException | IllegalArgumentException e) {
-            e.printStackTrace();
-        }
-
-        if (values.length() > 0) {
-            values.setLength(values.length() - 1);
-        }
-
-        return values.toString();
-    }
-
-    /**
-     * Descripción breve del método.
-     *
-     * @param String Model Name.
-     * @param Model Model.
-     * @return Return tableName from de Model.
-     * @throws Exception Anottation exeption.
-     */
-    private String tableName(Model model) {
-
-        String modelName = model.getClass().getSimpleName();
-        String tableName = modelName.replaceAll("Model$", "");
-
-        try {
-            Field field = model.getClass().getDeclaredField(modelName);
-
-            if (field.isAnnotationPresent(TableName.class)) {
-                TableName tableAnnotation = field.getAnnotation(TableName.class);
-
-                if (!tableAnnotation.tableName().isEmpty()) {
-                    tableName = tableAnnotation.tableName();
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return tableName.toLowerCase();
+        return new HashMap<>();
     }
 }

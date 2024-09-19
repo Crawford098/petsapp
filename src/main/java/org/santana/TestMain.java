@@ -1,34 +1,25 @@
 package org.santana;
 
-import org.santana.model.UsersModel;
-import org.santana.repository.UserRepository;
-import org.santana.service.auth.UserAuth;
-import org.santana.service.users.Users;
-
 class TestMain {
 
     public static void main(String[] args) {
 
-        Users user = new Users();
-        user.setUsername("Jonathan");
-        user.setEmail("prueba@gmail.com");
-        user.setPassword("123456");
+        // test with the function save() in repository.
+        // Users user = new Users();
+        // user.setUsername("prueba6");
+        // user.setEmail("prueba6@gmail.com");
+        // user.setPassword("123456");
+        // UserAuth auth = new UserAuth();
+        // System.out.println(auth.register(user)); 
 
-        UserAuth auth = new UserAuth();
+        // UserRepository userRepository = new UserRepository();
+        // UsersModel userModel = new UsersModel();
 
-        // System.out.println(auth.register(user));
-        UserRepository userRepository = new UserRepository();
-        // Map<String, Object> data = new HashMap();
-        // data.put("userName", "New name");
-        // data.put("email", "prueba2@prueba@gmail.com");
+        // userModel.setUsername("prueba5");
+        // userModel.setEmail("email5@gmail.com");
 
-        UsersModel userModel = new UsersModel();
-
-        userModel.setUsername("prueba");
-        userModel.setEmail("email@gmail.com");
-
-        //System.out.println(userModel.getPropertiesWithValue()); //probando funcion que me devuelve los campos con datos en esa clase.
-
-        System.out.println(userRepository.updateById(userModel, 1)); 
+        //System.out.println(userRepository.findById(2)); //find register By Id
+        // System.out.println(userRepository.findAll()); //find all register
+        // System.out.println(userRepository.updateById(userModel, 5)); // updates by Id
     }
 }

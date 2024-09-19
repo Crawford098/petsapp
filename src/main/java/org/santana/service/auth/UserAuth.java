@@ -3,6 +3,7 @@ package org.santana.service.auth;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.santana.model.UsersModel;
 import org.santana.repository.UserRepository;
@@ -51,10 +52,9 @@ public class UserAuth implements IAuth {
         userModel.setPassword(user.getPassword());
         userModel.setCreatedAt(LocalDate.now());
 
-        UserRepository repository = new UserRepository(userModel);
+        UserRepository repository = new UserRepository();
+        Map<String, Integer> result = repository.save(userModel);
 
-        boolean result = repository.save();
-
-        return (result) ? "Usuario " + user.getUsername() + " ha sido Registrado" : "El hubo un error al registrar el usuario";
+        return "inserted";
     }
 }
