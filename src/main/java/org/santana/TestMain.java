@@ -27,8 +27,8 @@ class TestMain {
         userModel.setUsername("prueba");
         userModel.setEmail("email@gmail.com");
 
-        userModel.getPropertiesWithValue();
+        //System.out.println(userModel.getPropertiesWithValue()); //probando funcion que me devuelve los campos con datos en esa clase.
 
-        // System.out.println(userRepository.updateById(userModel, 1));
+        System.out.println(userRepository.updateById(userModel, 1)); 
     }
 }

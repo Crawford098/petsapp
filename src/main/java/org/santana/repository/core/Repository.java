@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -87,23 +88,17 @@ public class Repository {
         return result;
     }
 
-    public boolean updateById(Model data, int id) {
-
-        String tableName = "pe_" + this.tableName(this.model);
-        Field[] modelFields = this.model.getClass().getDeclaredFields();
+    public Map updateById(Model data, int id) {
+        String tableName = "pe_" + data.tableName();
+        Field[] modelFields = this.model.getClass().getDeclaredFields(); //TODO: pasar al modelo
         String primaryKey = AnnotationHelpers.getAnnotationName(modelFields, PrimaryKey.class);
-
+        Map<String, Object> columnWithValues = data.getPropertiesWithValue();
         Field[] fields = data.getClass().getDeclaredFields();
-
+        int rowsInserted = 0;
         String columns = "";
 
-        for (Field field : fields) {
-
-            if (data.isPrimaryKey(field)) {
-                continue;
-            }
-
-            columns += field.getName() + " = ?,";
+        for (String key : columnWithValues.keySet()) {
+            columns += key + " = ?,";
         }
 
         String sql = "UPDATE " + tableName + " SET " + trimL(columns) + " WHERE " + primaryKey + " = " + id;
@@ -111,13 +106,20 @@ public class Repository {
         try {
             PreparedStatement ps = this.db.prepareStatement(sql);
 
-            ps.setObject(id, ps);
-        } catch (Exception e) {
+            int counter = 1;
 
+            for (Object value : columnWithValues.values()) {
+                ps.setObject(counter, value);
+                counter++;
+            }
+            rowsInserted = ps.executeUpdate();
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return true;
+        Map<String, Integer> result = new HashMap<>();
+        result.put("result", rowsInserted);
+        return result;
     }
 
     public void delete(int id) {

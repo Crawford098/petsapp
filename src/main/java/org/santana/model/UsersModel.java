@@ -1,6 +1,5 @@
 package org.santana.model;
 
-import java.lang.reflect.Field;
 import java.time.LocalDate;
 
 import org.santana.annotation.modelAnnotation.PrimaryKey;
@@ -58,23 +57,6 @@ public class UsersModel extends Model {
 
     public void setCreatedAt(LocalDate createdDate) {
         this.created_at = createdDate;
-    }
-
-    public void getPropertiesWithValue() {
-
-        Field[] fields = this.getClass().getDeclaredFields();
-
-        for (Field field : fields) {
-
-            if (this.isPrimaryKey(field)) {
-                continue;
-            }
-
-            System.out.println(field.getName());
-            System.out.println("-");
-
-        }
-
     }
 
 }
