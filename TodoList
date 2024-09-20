@@ -1,11 +1,4 @@
-Crear anotaciones de los modelos.
-
-Crear una capa para validar dichas anotaciones - opcional
-
 Crear validaciones en el modelo.
-
-
-en el modelo en el core arreglar esta funcion: tableName. Cuando defines en el modelo la tabla
 
 
 JAVA DOC

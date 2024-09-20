@@ -19,7 +19,7 @@ import org.santana.controller.helpers.RepositoryHelpers;
 import static org.santana.controller.helpers.StringHelper.trimL;
 import org.santana.model.core.Model;
 
-public class Repository implements IRepository{
+public class Repository implements IRepository {
 
     public Connection db;
     public Model model;
@@ -141,6 +141,26 @@ public class Repository implements IRepository{
     @Override
     public Map delete(int id) {
 
-        return new HashMap<>();
+        Map<String, Integer> result = new LinkedHashMap<>();
+        String tableName = "pe_" + this.model.tableName();
+        String primaryKey = this.model.primarykeyName();
+        String sql = " DELETE FROM " + tableName + " WHERE " + primaryKey + " = ?";
+        int queryResult = 0;
+
+        try {
+
+            PreparedStatement ps = this.db.prepareStatement(sql);
+            ps.setInt(1, id);
+            queryResult = ps.executeUpdate();
+
+        } catch (Exception e) {
+            System.out.println("\n===============ERROR MESSAGE============\n");
+            System.out.println(e.getMessage());
+            System.out.println("===============STACK TRACE============\n");
+            e.printStackTrace();
+        }
+
+        result.put("Result", queryResult);
+        return result;
     }
 }

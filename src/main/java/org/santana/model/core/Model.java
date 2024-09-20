@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.santana.annotation.modelAnnotation.PrimaryKey;
 import org.santana.annotation.modelAnnotation.TableName;
+import static org.santana.controller.helpers.AnnotationHelpers.getAnnotationField;
 import static org.santana.controller.helpers.AnnotationHelpers.getAnnotationName;
 import static org.santana.controller.helpers.StringHelper.trimL;
 
@@ -33,7 +34,6 @@ public class Model implements IModel {
         return getAnnotationName(modelFields, PrimaryKey.class);
     }
 
-    //todoProbar
     /**
      * Get database`s table name.
      *
@@ -42,23 +42,22 @@ public class Model implements IModel {
      */
     public String tableName() {
         String modelName = this.getClass().getSimpleName();
-        String tableName = modelName.replaceAll("Model$", "");
+        String tableName = modelName.replaceAll("Model$", "").toLowerCase();
 
         try {
-            Field field = this.getClass().getDeclaredField(modelName);
+            Field[] fields = this.getClass().getDeclaredFields();
+            Field field = getAnnotationField(fields, TableName.class);
 
-            if (field.isAnnotationPresent(TableName.class)) {
-                TableName tableAnnotation = field.getAnnotation(TableName.class);
+            TableName tableAnnotation = field.getAnnotation(TableName.class);
 
-                if (!tableAnnotation.tableName().isEmpty()) {
-                    tableName = tableAnnotation.tableName();
-                }
+            if (!tableAnnotation.value().isEmpty()) {
+                tableName = tableAnnotation.value();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return tableName.toLowerCase();
+        return tableName;
     }
 
     /**

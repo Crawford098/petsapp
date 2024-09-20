@@ -1,5 +1,8 @@
 package org.santana;
 
+import org.santana.model.UsersModel;
+import org.santana.repository.UserRepository;
+
 class TestMain {
 
     public static void main(String[] args) {
@@ -12,14 +15,18 @@ class TestMain {
         // UserAuth auth = new UserAuth();
         // System.out.println(auth.register(user)); 
 
-        // UserRepository userRepository = new UserRepository();
-        // UsersModel userModel = new UsersModel();
+        UserRepository userRepository = new UserRepository();
+        UsersModel userModel = new UsersModel();
 
-        // userModel.setUsername("prueba5");
-        // userModel.setEmail("email5@gmail.com");
+        userModel.setUsername("prueba5");
+        userModel.setEmail("email5@gmail.com");
+
+
+        System.out.println(userModel.tableName());
 
         //System.out.println(userRepository.findById(2)); //find register By Id
         // System.out.println(userRepository.findAll()); //find all register
         // System.out.println(userRepository.updateById(userModel, 5)); // updates by Id
+        // System.out.println(userRepository.delete(6)); // delete by Id
     }
 }

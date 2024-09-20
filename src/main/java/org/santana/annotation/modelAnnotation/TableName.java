@@ -5,5 +5,5 @@ import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.RUNTIME)
 public @interface TableName {
-    public String tableName() default "";
+    public String value() default "";
 }
